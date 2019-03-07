@@ -13,17 +13,23 @@ const BrowserSyncPlugin = require('browser-sync-webpack-plugin');
 const HOST = process.env.HOST;
 const PORT = process.env.PORT && Number(process.env.PORT);
 
+/**
+ * 通过选择 development 或 production 之中的一个，来设置 mode 参数，你可以启用相应模式下的 webpack 内置的优化
+ */
 module.exports = merge(baseWebpackConfig, {
   mode: 'development',
   module: {
     rules: utils.styleLoaders({ sourceMap: config.dev.cssSourceMap, usePostCSS: true })
   },
   // cheap-module-eval-source-map is faster for development
+  //https://www.webpackjs.com/concepts/
   devtool: config.dev.devtool,
+  //入口起点(entry point)指示 webpack 应该使用哪个模块，来作为构建其内部依赖图的开始。
   entry: {
     global: './src/main/webapp/content/scss/global.scss',
     main: './src/main/webapp/app/main'
   },
+  //output 属性告诉 webpack 在哪里输出它所创建的 bundles，以及如何命名这些文件，默认值为 ./dist
   output: {
     path: jhiUtils.root('target/www'),
     filename: 'app/[name].bundle.js',
@@ -77,6 +83,7 @@ module.exports = merge(baseWebpackConfig, {
       }
     ),
     // https://github.com/ampedandwired/html-webpack-plugin
+    //指定模板页面
     new HtmlWebpackPlugin({
       template: 'src/main/webapp/index.html',
       chunks: ['vendors', 'main', 'global'],
